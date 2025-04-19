@@ -25,7 +25,7 @@
         android:text="Nome:" />
 
     <EditText
-        android:id="@+id/etNome"
+        android:id="@+id/etName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -35,36 +35,36 @@
         android:text="Telefone:" />
 
     <EditText
-        android:id="@+id/etTelefone"
+        android:id="@+id/etPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btIncluir"
+        android:id="@+id/btInsert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Incluir" />
 
     <Button
-        android:id="@+id/btAlterar"
+        android:id="@+id/btUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alterar" />
 
     <Button
-        android:id="@+id/btPesquisar"
+        android:id="@+id/btSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pesquisar" />
 
     <Button
-        android:id="@+id/btListar"
+        android:id="@+id/btList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Listar" />
 
     <Button
-        android:id="@+id/btExcluir"
+        android:id="@+id/btDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Excluir" />

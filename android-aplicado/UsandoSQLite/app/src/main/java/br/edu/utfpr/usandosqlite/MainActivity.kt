@@ -1,17 +1,17 @@
 package br.edu.utfpr.usandosqlite
 
-import android.content.ContentValues
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import br.edu.utfpr.usandosqlite.database.DatabaseHandler
 import br.edu.utfpr.usandosqlite.databinding.ActivityMainBinding
+import br.edu.utfpr.usandosqlite.entity.Entry
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var database: SQLiteDatabase
+    private lateinit var database: DatabaseHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,88 +25,70 @@ class MainActivity : AppCompatActivity() {
 
         setButtonsListeners()
 
-        database = SQLiteDatabase.openOrCreateDatabase(
-            this.getDatabasePath("dbfile.sqlite"), null )
-
-        database.execSQL("CREATE TABLE IF NOT EXISTS cadastro " +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, telefone TEXT)")
+        database = DatabaseHandler(this)
     }
 
     private fun setButtonsListeners() {
-        binding.btIncluir.setOnClickListener {
-            btIncluirOnClick()
+        binding.btInsert.setOnClickListener {
+            btInsertOnClick()
         }
 
-        binding.btAlterar.setOnClickListener {
-            btAlterarOnClick()
+        binding.btUpdate.setOnClickListener {
+            btUpdateOnClick()
         }
 
-        binding.btListar.setOnClickListener {
-            btListarOnClick()
+        binding.btList.setOnClickListener {
+            btListOnClick()
         }
 
-        binding.btExcluir.setOnClickListener {
-            btExcluirOnClick()
+        binding.btDelete.setOnClickListener {
+            btDeleteOnClick()
         }
 
-        binding.btPesquisar.setOnClickListener {
-            btPesquisarOnClick()
+        binding.btSearch.setOnClickListener {
+            btSearchOnClick()
         }
     }
 
-    private fun btIncluirOnClick() {
-        val registry = ContentValues()
-        registry.put("nome", binding.etNome.text.toString())
-        registry.put("telefone", binding.etTelefone.text.toString())
-
-        database.insert("cadastro", null, registry)
-
+    private fun btInsertOnClick() {
+        val entry = Entry(0, binding.etName.text.toString(), binding.etPhone.text.toString())
+        database.insert(entry)
         Toast.makeText(this, "Registro inserido com sucesso!", Toast.LENGTH_LONG).show()
     }
 
-    private fun btAlterarOnClick() {
-        val registry = ContentValues()
-        registry.put("nome", binding.etNome.text.toString())
-        registry.put("telefone", binding.etTelefone.text.toString())
+    private fun btUpdateOnClick() {
+         val entry = Entry(binding.etCod.text.toString().toInt(),
+            binding.etName.text.toString(), binding.etPhone.text.toString())
 
-        database.update("cadastro",
-            registry,"_id=${binding.etCod.text}", null)
+        database.update(entry)
 
         Toast.makeText(this, "Registro alterado com sucesso!", Toast.LENGTH_LONG).show()
     }
 
-    private fun btExcluirOnClick() {
-        database.delete("cadastro",
-        "_id=${binding.etCod.text}", null)
+    private fun btDeleteOnClick() {
+        database.delete(binding.etCod.text.toString().toInt())
 
         Toast.makeText(this, "Registro excluído com sucesso!", Toast.LENGTH_LONG).show()
     }
 
-    private fun btListarOnClick() {
-        val cursor = database.query("cadastro", null, null, null, null, null, null)
+    private fun btListOnClick() {
+        val cursor = database.list()
         val output = StringBuilder()
+
         while (cursor.moveToNext()) {
-            output.append(cursor.getString(NOME))
-            output.append(" - ")
-            output.append(cursor.getString(TELEFONE))
-            output.append("\n")
+            output.append("Nome: ${cursor.getString(1)} - ")
+            output.append("Telefone: ${cursor.getString(2)}\n")
         }
+
         Toast.makeText(this, output.toString(), Toast.LENGTH_LONG).show()
     }
 
-    private fun btPesquisarOnClick() {
-        val registry = database.query("cadastro",
-            null, "_id=?", arrayOf(binding.etCod.text.toString()), null, null, null)
+    private fun btSearchOnClick() {
+        val entry: Entry? = database.search(binding.etCod.text.toString().toInt())
 
-        if (registry.moveToNext()) {
-            binding.etNome.setText(registry.getString(NOME))
-            binding.etTelefone.setText(registry.getString(TELEFONE))
+        if (entry != null) {
+            binding.etName.setText(entry.name)
+            binding.etPhone.setText(entry.phone)
         } else Toast.makeText(this, "Registro não encontrado!", Toast.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private const val ID = 0
-        private const val NOME = 1
-        private const val TELEFONE = 2
     }
 }
