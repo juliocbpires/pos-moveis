@@ -1,7 +1,9 @@
 package br.edu.utfpr.usandosqlite
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.main)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -72,15 +75,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun btListOnClick() {
-        val cursor = database.list()
-        val output = StringBuilder()
-
-        while (cursor.moveToNext()) {
-            output.append("Nome: ${cursor.getString(1)} - ")
-            output.append("Telefone: ${cursor.getString(2)}\n")
-        }
-
-        Toast.makeText(this, output.toString(), Toast.LENGTH_LONG).show()
+        val intent = Intent(this, ListActivity::class.java)
+        startActivity(intent)
+//        val cursor = database.list()
+//        val output = StringBuilder()
+//
+//        while (cursor.moveToNext()) {
+//            output.append("Nome: ${cursor.getString(1)} - ")
+//            output.append("Telefone: ${cursor.getString(2)}\n")
+//        }
+//
+//        Toast.makeText(this, output.toString(), Toast.LENGTH_LONG).show()
     }
 
     private fun btSearchOnClick() {
