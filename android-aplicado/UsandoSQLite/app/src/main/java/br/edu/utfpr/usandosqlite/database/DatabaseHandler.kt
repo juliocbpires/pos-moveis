@@ -63,8 +63,8 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "dbfile.sqlite"
         private const val TABLE_NAME = "record"
-        private const val ID = 0
-        private const val NAME = 1
-        private const val PHONE = 2
+        public const val ID = 0
+        public const val NAME = 1
+        public const val PHONE = 2
     }
 }

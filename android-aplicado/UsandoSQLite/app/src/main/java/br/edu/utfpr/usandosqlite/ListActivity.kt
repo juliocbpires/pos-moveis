@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import br.edu.utfpr.usandosqlite.adapter.MyAdapter
 import br.edu.utfpr.usandosqlite.database.DatabaseHandler
 import br.edu.utfpr.usandosqlite.databinding.ActivityListBinding
 
@@ -28,14 +29,7 @@ class ListActivity : AppCompatActivity() {
 
         val records = database.list()
 
-        val adapter = SimpleCursorAdapter(
-            this,
-            android.R.layout.simple_list_item_2,
-            records,
-            arrayOf("name", "phone"),
-            intArrayOf(android.R.id.text1, android.R.id.text2),
-            0
-        )
+        val adapter = MyAdapter(this, records)
 
         binding.lvRecords.adapter = adapter
     }
