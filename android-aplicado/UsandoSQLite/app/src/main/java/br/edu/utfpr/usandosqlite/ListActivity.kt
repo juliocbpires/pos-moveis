@@ -1,5 +1,6 @@
 package br.edu.utfpr.usandosqlite
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.SimpleCursorAdapter
 import androidx.activity.enableEdgeToEdge
@@ -27,10 +28,20 @@ class ListActivity : AppCompatActivity() {
 
         database = DatabaseHandler(this)
 
+
+
+        binding.btIncluir.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         val records = database.list()
-
         val adapter = MyAdapter(this, records)
-
         binding.lvRecords.adapter = adapter
+
     }
 }

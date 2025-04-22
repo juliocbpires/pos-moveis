@@ -2,8 +2,12 @@ package br.edu.utfpr.usandosqlite
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,20 +32,26 @@ class MainActivity : AppCompatActivity() {
 
         setButtonsListeners()
 
+        initData()
+
         database = DatabaseHandler(this)
     }
 
-    private fun setButtonsListeners() {
-        binding.btInsert.setOnClickListener {
-            btInsertOnClick()
+    private fun initData() {
+        if (intent.getIntExtra("id", 0) != 0) {
+            binding.etCod.setText(intent.getIntExtra("id", 0).toString())
+            binding.etName.setText(intent.getStringExtra("name"))
+            binding.etPhone.setText(intent.getStringExtra("phone"))
+        } else {
+            binding.btSearch.visibility = View.GONE
+            binding.btDelete.visibility = View.GONE
         }
+    }
+
+    private fun setButtonsListeners() {
 
         binding.btUpdate.setOnClickListener {
             btUpdateOnClick()
-        }
-
-        binding.btList.setOnClickListener {
-            btListOnClick()
         }
 
         binding.btDelete.setOnClickListener {
@@ -53,47 +63,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun btInsertOnClick() {
-        val entry = Entry(0, binding.etName.text.toString(), binding.etPhone.text.toString())
-        database.insert(entry)
-        Toast.makeText(this, "Registro inserido com sucesso!", Toast.LENGTH_LONG).show()
-    }
-
     private fun btUpdateOnClick() {
-         val entry = Entry(binding.etCod.text.toString().toInt(),
-            binding.etName.text.toString(), binding.etPhone.text.toString())
+        if (binding.etCod.text.toString().isEmpty()) {
+            val entry = Entry(0, binding.etName.text.toString(), binding.etPhone.text.toString())
+            database.insert(entry)
+            Toast.makeText(this, "Registro inserido com sucesso!", Toast.LENGTH_LONG).show()
+            finish()
+        } else {
 
-        database.update(entry)
+            val entry = Entry(binding.etCod.text.toString().toInt(),
+                binding.etName.text.toString(), binding.etPhone.text.toString())
 
-        Toast.makeText(this, "Registro alterado com sucesso!", Toast.LENGTH_LONG).show()
+            database.update(entry)
+
+            Toast.makeText(this, "Registro alterado com sucesso!", Toast.LENGTH_LONG).show()
+
+            finish()
+        }
     }
 
     private fun btDeleteOnClick() {
         database.delete(binding.etCod.text.toString().toInt())
 
         Toast.makeText(this, "Registro excluído com sucesso!", Toast.LENGTH_LONG).show()
+
+        finish()
     }
 
     private fun btListOnClick() {
         val intent = Intent(this, ListActivity::class.java)
         startActivity(intent)
-//        val cursor = database.list()
-//        val output = StringBuilder()
-//
-//        while (cursor.moveToNext()) {
-//            output.append("Nome: ${cursor.getString(1)} - ")
-//            output.append("Telefone: ${cursor.getString(2)}\n")
-//        }
-//
-//        Toast.makeText(this, output.toString(), Toast.LENGTH_LONG).show()
     }
 
     private fun btSearchOnClick() {
-        val entry: Entry? = database.search(binding.etCod.text.toString().toInt())
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Código da Pessoa")
+        val input = EditText(this)
+        builder.setView(input)
+        builder.setCancelable(false)
+        builder.setNegativeButton("Fechar", null)
+        builder.setPositiveButton("Pesquisar", { dialogInterface, i ->
+            val entry: Entry? = database.search(input.text.toString().toInt())
 
-        if (entry != null) {
-            binding.etName.setText(entry.name)
-            binding.etPhone.setText(entry.phone)
-        } else Toast.makeText(this, "Registro não encontrado!", Toast.LENGTH_LONG).show()
-    }
+            if (entry != null) {
+                binding.etCod.setText(input.text.toString())
+                binding.etName.setText(entry.name)
+                binding.etPhone.setText(entry.phone)
+            } else Toast.makeText(this, "Registro não encontrado!", Toast.LENGTH_LONG).show()
+        })
+        builder.show()
+        }
 }
