@@ -2,15 +2,18 @@ package br.edu.utfpr.usandocomponentesvisuais
 
 import android.os.Bundle
 import android.view.View
-import android.widget.CheckBox
-import android.widget.Toast
+import android.widget.LinearLayout
+import android.widget.RatingBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var checkbox: CheckBox
+    private lateinit var window: LinearLayout
+    private lateinit var ratingBar: RatingBar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,14 +25,11 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        checkbox = findViewById(R.id.checkbox)
+        window = findViewById(R.id.main)
+        ratingBar = findViewById(R.id.ratingBar)
     }
 
     fun onTestComponentClick(view: View) {
-        if (checkbox.isChecked) {
-            Toast.makeText(this, "Selecionado", Toast.LENGTH_LONG).show()
-        }
+        Snackbar.make(window, "Avaliação: ${ratingBar.rating}", Snackbar.LENGTH_LONG).show()
     }
-
-
 }
