@@ -8,11 +8,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnTestComponents"
+    <EditText
+        android:id="@+id/etText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Testar Componente"
-        android:onClick="onTestComponentClick" />
+        android:hint="Clique para informar o nascimento"/>
 
 </LinearLayout>
