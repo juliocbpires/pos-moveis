@@ -1,5 +1,7 @@
 package br.edu.utfpr.usandocomponentesvisuais
 
+import android.app.DatePickerDialog
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
@@ -25,11 +27,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         window = findViewById(R.id.main)
-        datePicker = findViewById(R.id.datePicker)
     }
 
     fun onTestComponentClick(view: View) {
-        val formattededDate = "${datePicker.dayOfMonth}/${datePicker.month + 1}/${datePicker.year}"
-        Snackbar.make(window, "Data: $formattededDate", Snackbar.LENGTH_LONG).show()
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val dialog = DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                Snackbar.make(window, "Data: $formattedDate", Snackbar.LENGTH_LONG).show()
+            },
+            year,
+            month,
+            day
+        )
+
+        dialog.show()
     }
 }
